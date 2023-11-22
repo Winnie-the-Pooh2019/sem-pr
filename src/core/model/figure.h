@@ -49,6 +49,8 @@ public:
         this->color = generateColor();
     }
 
+    Figure& operator = (const Figure& source) = default;
+
     bool operator == (const Figure& other) const {
         return getSquare() == other.getSquare();
     }

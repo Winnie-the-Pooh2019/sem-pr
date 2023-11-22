@@ -17,6 +17,8 @@ public:
         angle = 90;
     }
 
+    Rectangle& operator = (const Rectangle& source) = default;
+
 public:
     string toString() const override {
         nlohmann::json json{};

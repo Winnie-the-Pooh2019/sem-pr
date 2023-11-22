@@ -16,6 +16,8 @@ public:
 
     explicit Circle(double radius) : radius(radius) {}
 
+    Circle& operator = (const Circle& source) = default;
+
 public:
     double getSquare() const override {
         return radius * radius * M_PI;

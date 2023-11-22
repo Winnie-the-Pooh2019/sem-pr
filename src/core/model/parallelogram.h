@@ -27,6 +27,8 @@ public:
         angle = genRandomNumber(M_PI * 15 / 180, M_PI * 70 / 180);
     }
 
+    Parallelogram& operator = (const Parallelogram& source) = default;
+
     double getLength() const {
         return length;
     }

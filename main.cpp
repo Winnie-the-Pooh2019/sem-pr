@@ -2,6 +2,7 @@
 #include "string"
 #include "src/core/model/circle.h"
 #include "ctime"
+#include "src/core/utils/vector.h"
 
 using namespace std;
 
@@ -13,6 +14,8 @@ public:
 
 int main() {
     srand(time(nullptr));
+
+    Vector<Circle> vector{};
 
     Circle one{};
     Circle two{};
