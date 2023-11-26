@@ -37,6 +37,11 @@ public:
         this->color = rgbToHex(red, green, blue);
     }
 
+    Figure(const Figure& source) {
+        position = source.position;
+        color = source.color;
+    }
+
     const Point getPosition() const {
         return position;
     }
@@ -45,11 +50,22 @@ public:
         Figure::position = position;
     }
 
+    string getColor() const {
+        return color;
+    }
+
+    void setColor(string col) {
+        this->color = col;
+    }
+
     void changeRandomColor() {
         this->color = generateColor();
     }
 
-    Figure& operator = (const Figure& source) = default;
+    Figure& operator = (const Figure& source) {
+        position = source.position;
+        color = source.color;
+    }
 
     bool operator == (const Figure& other) const {
         return getSquare() == other.getSquare();

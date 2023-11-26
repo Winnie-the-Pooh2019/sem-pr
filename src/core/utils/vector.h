@@ -6,11 +6,11 @@ class IVector {
 public:
     virtual int length() = 0;
 
-    virtual bool add(T e) = 0;
+    virtual void add(T e) = 0;
 
-    virtual bool add(IVector<T>* list) = 0;
+    virtual void add(IVector<T>* list) = 0;
 
-    virtual bool add(T e, int to) = 0;
+    virtual void add(T e, int to) = 0;
 
     virtual void clear() = 0;
 
@@ -18,11 +18,11 @@ public:
 
     virtual int indexOf(T e) = 0;
 
-    virtual void remove(int index) = 0;
+    virtual bool removeByIndex(int index) = 0;
 
     virtual bool remove(T e) = 0;
 
-    virtual void remove(IVector<T>* list) = 0;
+    virtual void removeAll(IVector<T>* list) = 0;
 
     virtual void copy(T* source, int size) = 0;
 
@@ -35,6 +35,7 @@ template<typename T>
 class Vector : public IVector<T> {
     T* values;
     int size;
+public:
     int capacity;
 
 public:
@@ -72,38 +73,28 @@ public:
         return size;
     }
 
-    bool add(T e) override {
+    void add(T e) override {
         if (size == capacity)
-            resize(size + 1);
+            resize();
 
-        values[size + 1] = e;
-        size *= 1.5;
-
-        return false;
+        values[size] = e;
+        size++;
     }
 
-    bool add(IVector<T>* list) override {
-        if (size + list->length() >= capacity)
-            resize(size + list->length());
-
-        for (int i = size; i < size + list->length(); i++)
-            values[i] = list->operator[](i);
-
-        size += list->length();
-
-        return false;
+    void add(IVector<T>* list) override {
+        for (int i = 0; i < list->length(); i++)
+            add((*list)[i]);
     }
 
-    bool add(T e, int to) override {
+    void add(T e, int to) override {
         if (size == capacity)
-            resize(size + 1);
+            resize();
 
         if (!shift(to))
-            return false;
+            return;
 
         values[to] = e;
-
-        return true;
+        size++;
     }
 
     void clear() override {
@@ -128,24 +119,33 @@ public:
         return -1;
     }
 
-    void remove(int index) override {
+    bool removeByIndex(int index) override {
         if (index < 0 || index >= size)
-            return;
+            return false;
 
-        shift(index, -1);
+        return shift(index, -1);
     }
 
     bool remove(T e) override {
         int index = indexOf(e);
 
-        remove(index);
+        if (index < 0 || index >= size)
+            return false;
 
-        return index == -1;
+        shift(index, -1);
+
+        return true;
     }
 
-    void remove(IVector<T>* list) override {
-        for (int i = 0; i < list->length(); i++)
-            remove(list[i]);
+    void removeAll(IVector<T>* list) override {
+        for (int i = 0; i < list->length(); i++) {
+            int index = indexOf(list->operator[](i));
+
+            if (index < 0 || index >= size)
+                return;
+
+            shift(index, -1);
+        }
     }
 
     void fit() {
@@ -162,7 +162,7 @@ public:
     }
 
     T &operator[](int index) const override {
-        return values[0];
+        return values[index];
     }
 
 private:
@@ -173,7 +173,7 @@ private:
 
     void copy(IVector<T>* source) override {
         for (int i = 0; i < source->length(); i++)
-            values[i] = source[i];
+            values[i] = (*source)[i];
     }
 
     void resize(int newSize) {
@@ -185,6 +185,18 @@ private:
 
         size = newSize;
         capacity = newCapacity;
+        delete[] values;
+        values = newValues;
+    }
+
+    void resize() {
+        capacity = (capacity == 0) ? 1 : capacity * 2;
+
+        T* newValues = new T[capacity];
+
+        for (int i = 0; i < size; i++)
+            newValues[i] = values[i];
+
         delete[] values;
         values = newValues;
     }

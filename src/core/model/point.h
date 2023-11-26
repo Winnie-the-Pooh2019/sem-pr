@@ -26,7 +26,12 @@ public:
         this->y = point.y;
     }
 
-    Point& operator = (const Point& point) = default;
+    Point& operator = (const Point& point) {
+        this->y = point.y;
+        this->x = point.x;
+
+        return *this;
+    }
 
     int getX() const {
         return x;

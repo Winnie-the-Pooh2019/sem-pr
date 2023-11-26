@@ -16,9 +16,17 @@ public:
 
     explicit Circle(double radius) : radius(radius) {}
 
-    Circle& operator = (const Circle& source) = default;
+    Circle(const Circle& source) : Figure(source) {
+        radius = source.radius;
+    }
 
-public:
+    Circle& operator = (const Circle& source) {
+        Figure::operator=(source);
+        radius = source.radius;
+
+        return *this;
+    };
+
     double getSquare() const override {
         return radius * radius * M_PI;
     }

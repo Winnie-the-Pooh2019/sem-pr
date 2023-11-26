@@ -12,4 +12,5 @@ add_executable(sem_pr main.cpp
         src/core/model/parallelogram.h
         src/core/model/rectangle.h
         src/core/dao/filereader.h
-        src/core/utils/vector.h)
+        src/core/utils/vector.h
+        src/core/model/triangle.h)
